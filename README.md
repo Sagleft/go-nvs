@@ -63,4 +63,8 @@ for _, entry := range entrys {
 
 ## Donate
 
-```Ed1epQAF8TW5VDhZUusf4MsMNpNh9UMzm2```
+![logo](examples/donate.png)
+
+```
+Ed1epQAF8TW5VDhZUusf4MsMNpNh9UMzm2
+```
