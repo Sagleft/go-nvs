@@ -1,4 +1,4 @@
-module github./com/sagleft/go-nvs
+module github.com/sagleft/go-nvs
 
 go 1.16
 
