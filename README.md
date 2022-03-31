@@ -16,6 +16,8 @@ go get github.com/sagleft/go-nvs
 
 ## Usage example
 
+Write new data to the blockchain:
+
 ```go
 client, err := gonvs.NewClient(gonvs.CreateClientTask{
 	RPCUser:     os.Getenv("USER"),
@@ -34,4 +36,29 @@ if err != nil {
 	log.Fatalln(err)
 }
 
+```
+
+Get a list of records at the address:
+
+```go
+client, err := gonvs.NewClient(gonvs.CreateClientTask{
+	RPCUser:     os.Getenv("USER"),
+	RPCPassword: os.Getenv("PASSWORD"),
+})
+if err != nil {
+	log.Fatalln(err)
+}
+
+address := os.Getenv("ADDRESS")
+entrys, err := client.GetEntrysByAddress(gonvs.GetEntrysByAddressTask{
+	Address: address,
+})
+if err != nil {
+	log.Fatalln(err)
+}
+
+fmt.Println("NVS entrys for address `" + address + "`:")
+for _, entry := range entrys {
+	fmt.Println("    " + entry.Name)
+}
 ```

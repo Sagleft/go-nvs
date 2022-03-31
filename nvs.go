@@ -53,3 +53,34 @@ func (c *Client) Write(task WriteEntryTask) error {
 	}
 	return nil
 }
+
+// GetEntrysByAddress -
+func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error) {
+	requestData := []json.RawMessage{
+		wrapJSONParam(task.Address),
+	}
+	if task.MaxValueLength > 0 {
+		requestData = append(requestData, json.RawMessage(strconv.Itoa(task.MaxValueLength)))
+	}
+	if task.ValueType != "" {
+		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
+	}
+
+	response, err := c.RPC.RawRequest("name_scan_address", requestData)
+	if err != nil {
+		return nil, errors.New("failed to get entrys: " + err.Error())
+	}
+
+	// Entry
+	jsonBytes, err := response.MarshalJSON()
+	if err != nil {
+		return nil, errors.New("failed to json encode client response: " + err.Error())
+	}
+
+	result := []Entry{}
+	err = json.Unmarshal(jsonBytes, &result)
+	if err != nil {
+		return nil, errors.New("failed to decode json response: " + err.Error())
+	}
+	return result, nil
+}
