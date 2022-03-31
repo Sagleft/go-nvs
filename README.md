@@ -60,3 +60,7 @@ for _, entry := range entrys {
 	fmt.Println("    " + entry.Name)
 }
 ```
+
+## Donate
+
+```Ed1epQAF8TW5VDhZUusf4MsMNpNh9UMzm2```
