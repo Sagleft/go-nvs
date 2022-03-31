@@ -34,28 +34,22 @@ func NewClient(task CreateClientTask) (*Client, error) {
 	return &c, nil
 }
 
-func (c *Client) Write(task WriteEntryTask) ([]byte, error) {
+func (c *Client) Write(task WriteEntryTask) error {
 	requestData := []json.RawMessage{
-		json.RawMessage(task.Name),
-		json.RawMessage(task.Value),
+		wrapJSONParam(task.Name),
+		wrapJSONParam(string(task.Value)),
 		json.RawMessage(strconv.Itoa(task.Days)),
 	}
 	if task.ToAddress != "" {
-		requestData = append(requestData, json.RawMessage(task.ToAddress))
+		requestData = append(requestData, wrapJSONParam(task.ToAddress))
 	}
 	if task.ValueType != "" {
-		requestData = append(requestData, json.RawMessage(task.ValueType))
+		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
 	}
 
-	response, err := c.RPC.RawRequest("name_new", requestData)
+	_, err := c.RPC.RawRequest("name_new", requestData)
 	if err != nil {
-		return nil, errors.New("failed to write entry: " + err.Error())
+		return errors.New("failed to write entry: " + err.Error())
 	}
-
-	msg, err := response.MarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-
-	return msg, nil
+	return nil
 }

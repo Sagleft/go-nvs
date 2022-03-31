@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/google/uuid"
 	gonvs "github.com/sagleft/go-nvs"
 )
 
@@ -17,7 +18,7 @@ func main() {
 	}
 
 	err = client.Write(gonvs.WriteEntryTask{
-		Name:  "test:0001",
+		Name:  "test:" + uuid.NewString(),
 		Value: []byte("entry value"),
 		Days:  30,
 	})

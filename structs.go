@@ -28,7 +28,7 @@ const (
 	// ValueTypeBase64 - base64 value
 	ValueTypeBase64 string = "base64"
 
-	// ValueTypePlain - plain value
+	// ValueTypePlain - plain (unicode) string. by default
 	ValueTypePlain string = ""
 )
 
