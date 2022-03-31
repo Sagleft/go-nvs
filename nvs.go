@@ -1,6 +1,10 @@
 package gonvs
 
 import (
+	"encoding/json"
+	"errors"
+	"strconv"
+
 	rpcclient "github.com/bitlum/go-bitcoind-rpc/rpcclient"
 )
 
@@ -30,7 +34,28 @@ func NewClient(task CreateClientTask) (*Client, error) {
 	return &c, nil
 }
 
-func (c *Client) Write(task WriteEntryTask) error {
-	// TODO
-	return nil
+func (c *Client) Write(task WriteEntryTask) ([]byte, error) {
+	requestData := []json.RawMessage{
+		json.RawMessage(task.Name),
+		json.RawMessage(task.Value),
+		json.RawMessage(strconv.Itoa(task.Days)),
+	}
+	if task.ToAddress != "" {
+		requestData = append(requestData, json.RawMessage(task.ToAddress))
+	}
+	if task.ValueType != "" {
+		requestData = append(requestData, json.RawMessage(task.ValueType))
+	}
+
+	response, err := c.RPC.RawRequest("name_new", requestData)
+	if err != nil {
+		return nil, errors.New("failed to write entry: " + err.Error())
+	}
+
+	msg, err := response.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	return msg, nil
 }

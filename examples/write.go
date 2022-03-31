@@ -19,6 +19,7 @@ func main() {
 	err = client.Write(gonvs.WriteEntryTask{
 		Name:  "test:0001",
 		Value: []byte("entry value"),
+		Days:  30,
 	})
 	if err != nil {
 		log.Fatalln(err)

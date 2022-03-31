@@ -8,6 +8,12 @@ Emercoin NVS lib written in Go
 
 -----
 
+## Install
+
+```bash
+go get github.com/sagleft/go-nvs
+```
+
 ## Usage example
 
 ```go
