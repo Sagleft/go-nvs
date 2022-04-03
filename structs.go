@@ -74,3 +74,13 @@ type GetEntryTask struct {
 	ValueType ValueType `json:"type"`
 	Filepath  string    `json:"filepath"`
 }
+
+// GetEntryHistoryTask - get NVS entry history
+type GetEntryHistoryTask struct {
+	// required
+	Name string `json:"name"`
+
+	// optional
+	LoadFullHistory bool      `json:"fullhistory"`
+	ValueType       ValueType `json:"type"`
+}

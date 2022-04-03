@@ -1,6 +1,8 @@
 package gonvs
 
 import (
+	"strconv"
+
 	rpcclient "github.com/bitlum/go-bitcoind-rpc/rpcclient"
 )
 
@@ -92,4 +94,21 @@ func (c *Client) GetEntry(task GetEntryTask) error {
 	}
 
 	return c.sendRequest("name_show", &result, requestData)
+}
+
+// GetEntryHistory - look up the current and all past data for the given name.
+func (c *Client) GetEntryHistory(task GetEntryHistoryTask) error {
+	var result interface{}
+	requestData := []interface{}{
+		task.Name,
+	}
+	if task.LoadFullHistory {
+		requestData = append(requestData, "true")
+	}
+	if task.ValueType != "" {
+		requestData = append(requestData, strconv.FormatBool(task.LoadFullHistory))
+		requestData = append(requestData, string(task.ValueType))
+	}
+
+	return c.sendRequest("name_history", &result, requestData)
 }
