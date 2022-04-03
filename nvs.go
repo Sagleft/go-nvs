@@ -1,9 +1,6 @@
 package gonvs
 
 import (
-	"encoding/json"
-	"strconv"
-
 	rpcclient "github.com/bitlum/go-bitcoind-rpc/rpcclient"
 )
 
@@ -34,20 +31,20 @@ func NewClient(task CreateClientTask) (*Client, error) {
 }
 
 func (c *Client) Write(task WriteEntryTask) error {
-	requestData := []json.RawMessage{
-		wrapJSONParam(task.Name),
-		wrapJSONParam(string(task.Value)),
-		json.RawMessage(strconv.Itoa(task.Days)),
+	requestData := []interface{}{
+		task.Name,
+		string(task.Value),
+		task.Days,
 	}
 	if task.ToAddress != "" {
-		requestData = append(requestData, wrapJSONParam(task.ToAddress))
+		requestData = append(requestData, task.ToAddress)
 	}
 	if task.ValueType != "" {
-		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
+		requestData = append(requestData, string(task.ValueType))
 	}
 
 	var result interface{}
-	err := c.sendRequest(requestData, "name_new", &result)
+	err := c.sendRequest("name_new", &result, requestData)
 	if err != nil {
 		return err
 	}
@@ -56,18 +53,18 @@ func (c *Client) Write(task WriteEntryTask) error {
 
 // GetEntrysByAddress - get NVS entrys by given EMC address
 func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error) {
-	requestData := []json.RawMessage{
-		wrapJSONParam(task.Address),
+	requestData := []interface{}{
+		task.Address,
 	}
 	if task.MaxValueLength > 0 {
-		requestData = append(requestData, json.RawMessage(strconv.Itoa(task.MaxValueLength)))
+		requestData = append(requestData, task.MaxValueLength)
 	}
 	if task.ValueType != "" {
-		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
+		requestData = append(requestData, string(task.ValueType))
 	}
 
 	result := []Entry{}
-	err := c.sendRequest(requestData, "name_scan_address", &result)
+	err := c.sendRequest("name_scan_address", &result, requestData)
 	if err != nil {
 		return nil, err
 	}

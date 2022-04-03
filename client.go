@@ -3,10 +3,30 @@ package gonvs
 import (
 	"encoding/json"
 	"errors"
+	"reflect"
+	"strconv"
 )
 
-func (c *Client) sendRequest(requestData []json.RawMessage, methodName string, resultPointer interface{}) error {
-	response, err := c.RPC.RawRequest("", requestData)
+func (c *Client) sendRequest(methodName string, resultPointer interface{}, requestData []interface{}) error {
+	requestFields := []json.RawMessage{}
+	for i := 0; i < len(requestData); i++ {
+		fieldData := requestData[i]
+		switch fieldData.(type) {
+		default:
+			return errors.New("unknown field value: " + reflect.ValueOf(fieldData).String())
+		case string:
+			requestFields = append(requestFields, wrapJSONParam(fieldData.(string)))
+			break
+		case int:
+			requestFields = append(requestFields, json.RawMessage(strconv.Itoa(fieldData.(int))))
+		case int64:
+			requestFields = append(requestFields, json.RawMessage(
+				strconv.FormatInt(fieldData.(int64), 10)),
+			)
+		}
+	}
+
+	response, err := c.RPC.RawRequest(methodName, requestFields)
 	if err != nil {
 		return errors.New("failed to get entrys: " + err.Error())
 	}

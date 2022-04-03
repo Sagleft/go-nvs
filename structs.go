@@ -11,10 +11,10 @@ type Client struct {
 
 // CreateClientTask - new Client data
 type CreateClientTask struct {
-	Host        string `json:"host"`
+	Host        string `json:"host"` // default: 127.0.0.1
 	RPCUser     string `json:"user"`
 	RPCPassword string `json:"password"`
-	RPCPort     string `json:"port"`
+	RPCPort     string `json:"port"` // default: 6662
 	UseSSL      bool   `json:"useSSL"`
 }
 
