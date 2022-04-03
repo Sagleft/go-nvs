@@ -56,13 +56,13 @@ type GetEntrysByAddressTask struct {
 
 // Entry - NVS Entry
 type Entry struct {
-	Name      string
-	Value     string
-	TXID      string
-	Address   string
-	ExpiresIn int
-	ExpiresAt int
-	Time      int64
+	Name      string `json:"name"`
+	Value     string `json:"value"`
+	TXID      string `json:"txid"`
+	Address   string `json:"address"`
+	ExpiresIn int    `json:"expiresIn"`
+	ExpiresAt int    `json:"expiresAt"`
+	Time      int64  `json:"time"`
 }
 
 // GetEntryTask - get NVS entry task
