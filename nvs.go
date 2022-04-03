@@ -2,7 +2,6 @@ package gonvs
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 
 	rpcclient "github.com/bitlum/go-bitcoind-rpc/rpcclient"
@@ -47,14 +46,15 @@ func (c *Client) Write(task WriteEntryTask) error {
 		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
 	}
 
-	_, err := c.RPC.RawRequest("name_new", requestData)
+	var result interface{}
+	err := c.sendRequest(requestData, "name_new", &result)
 	if err != nil {
-		return errors.New("failed to write entry: " + err.Error())
+		return err
 	}
 	return nil
 }
 
-// GetEntrysByAddress -
+// GetEntrysByAddress - get NVS entrys by given EMC address
 func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error) {
 	requestData := []json.RawMessage{
 		wrapJSONParam(task.Address),
@@ -66,21 +66,11 @@ func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error
 		requestData = append(requestData, wrapJSONParam(string(task.ValueType)))
 	}
 
-	response, err := c.RPC.RawRequest("name_scan_address", requestData)
-	if err != nil {
-		return nil, errors.New("failed to get entrys: " + err.Error())
-	}
-
-	// Entry
-	jsonBytes, err := response.MarshalJSON()
-	if err != nil {
-		return nil, errors.New("failed to json encode client response: " + err.Error())
-	}
-
 	result := []Entry{}
-	err = json.Unmarshal(jsonBytes, &result)
+	err := c.sendRequest(requestData, "name_scan_address", &result)
 	if err != nil {
-		return nil, errors.New("failed to decode json response: " + err.Error())
+		return nil, err
 	}
+
 	return result, nil
 }
