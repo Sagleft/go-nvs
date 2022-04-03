@@ -54,8 +54,6 @@ type GetEntrysByAddressTask struct {
 	ValueType      ValueType `json:"type"`
 }
 
-// [{"name":"test:0001","value":"entry value","txid":"bc50ad44b665ec05f4a42138181459bfb6c9357cedd973c99f1cc54254bc1315","address":"Edeve4DB1tn7epp796HV7WWWN3gHyzqqKy","expires_in":5250,"expires_at":538063,"time":1648763104}]
-
 // Entry - NVS Entry
 type Entry struct {
 	Name      string
@@ -65,4 +63,14 @@ type Entry struct {
 	ExpiresIn int
 	ExpiresAt int
 	Time      int64
+}
+
+// GetEntryTask - get NVS entry task
+type GetEntryTask struct {
+	// required
+	Name string `json:"name"`
+
+	// optional
+	ValueType ValueType `json:"type"`
+	Filepath  string    `json:"filepath"`
 }

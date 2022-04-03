@@ -77,3 +77,19 @@ func (c *Client) DeleteEntry(entryName string) error {
 	var result interface{}
 	return c.sendRequest("name_delete", &result, []interface{}{entryName})
 }
+
+// GetEntry - get NVS entry value
+func (c *Client) GetEntry(task GetEntryTask) error {
+	var result interface{}
+	requestData := []interface{}{
+		task.Name, task.ValueType,
+	}
+	if task.ValueType != "" {
+		requestData = append(requestData, string(task.ValueType))
+	}
+	if task.Filepath != "" {
+		requestData = append(requestData, task.Filepath)
+	}
+
+	return c.sendRequest("name_show", &result, requestData)
+}
