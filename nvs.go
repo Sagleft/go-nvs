@@ -71,3 +71,9 @@ func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error
 
 	return result, nil
 }
+
+// DeleteEntry - delete NVS entry
+func (c *Client) DeleteEntry(entryName string) error {
+	var result interface{}
+	return c.sendRequest("name_delete", &result, []interface{}{entryName})
+}
