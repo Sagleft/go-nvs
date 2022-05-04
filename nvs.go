@@ -2,6 +2,7 @@ package gonvs
 
 import (
 	"strconv"
+	"strings"
 
 	rpcclient "github.com/bitlum/go-bitcoind-rpc/rpcclient"
 )
@@ -95,6 +96,9 @@ func (c *Client) GetEntry(task GetEntryTask) (Entry, error) {
 
 	err := c.sendRequest("name_show", &result, requestData)
 	if err != nil {
+		if strings.Contains(err.Error(), "found nothing") {
+			return Entry{}, nil
+		}
 		return Entry{}, err
 	}
 
