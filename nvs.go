@@ -69,6 +69,9 @@ func (c *Client) GetEntrysByAddress(task GetEntrysByAddressTask) ([]Entry, error
 	result := []Entry{}
 	err := c.sendRequest("name_scan_address", &result, requestData)
 	if err != nil {
+		if isNVSNotFound(err) {
+			return result, nil
+		}
 		return nil, err
 	}
 
@@ -96,13 +99,17 @@ func (c *Client) GetEntry(task GetEntryTask) (Entry, error) {
 
 	err := c.sendRequest("name_show", &result, requestData)
 	if err != nil {
-		if strings.Contains(err.Error(), "found nothing") {
+		if isNVSNotFound(err) {
 			return Entry{}, nil
 		}
 		return Entry{}, err
 	}
 
 	return result, nil
+}
+
+func isNVSNotFound(err error) bool {
+	return strings.Contains(err.Error(), "found nothing")
 }
 
 // GetEntryHistory - look up the current and all past data for the given name.
