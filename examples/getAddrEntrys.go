@@ -12,6 +12,7 @@ func main() {
 	client, err := gonvs.NewClient(gonvs.CreateClientTask{
 		RPCUser:     os.Getenv("USER"),
 		RPCPassword: os.Getenv("PASSWORD"),
+		RPCPort:     os.Getenv("PORT"),
 	})
 	if err != nil {
 		log.Fatalln(err)
