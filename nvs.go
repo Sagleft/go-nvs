@@ -81,8 +81,8 @@ func (c *Client) DeleteEntry(entryName string) error {
 }
 
 // GetEntry - get NVS entry value
-func (c *Client) GetEntry(task GetEntryTask) error {
-	var result interface{}
+func (c *Client) GetEntry(task GetEntryTask) (Entry, error) {
+	var result Entry
 	requestData := []interface{}{
 		task.Name, task.ValueType,
 	}
@@ -93,7 +93,12 @@ func (c *Client) GetEntry(task GetEntryTask) error {
 		requestData = append(requestData, task.Filepath)
 	}
 
-	return c.sendRequest("name_show", &result, requestData)
+	err := c.sendRequest("name_show", &result, requestData)
+	if err != nil {
+		return Entry{}, err
+	}
+
+	return result, nil
 }
 
 // GetEntryHistory - look up the current and all past data for the given name.
