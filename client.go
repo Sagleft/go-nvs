@@ -19,10 +19,15 @@ func (c *Client) sendRequest(methodName string, resultPointer interface{}, reque
 			break
 		case int:
 			requestFields = append(requestFields, json.RawMessage(strconv.Itoa(fieldData.(int))))
+			break
 		case int64:
 			requestFields = append(requestFields, json.RawMessage(
 				strconv.FormatInt(fieldData.(int64), 10)),
 			)
+			break
+		case ValueType:
+			requestFields = append(requestFields, wrapJSONParam(string(fieldData.(ValueType))))
+			break
 		}
 	}
 
