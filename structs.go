@@ -84,3 +84,25 @@ type GetEntryHistoryTask struct {
 	LoadFullHistory bool      `json:"fullhistory"`
 	ValueType       ValueType `json:"type"`
 }
+
+type rawTXInput struct {
+	TransactionID string `json:"txid"`
+	VOut          int    `json:"vout"`
+}
+
+type unspentData struct {
+	TransactionID string  `json:"txid"`
+	VOut          int     `json:"vout"`
+	Address       string  `json:"address"`
+	Account       string  `json:"account"`
+	ScriptPubKey  string  `json:"scriptPubKey"`
+	Amount        float64 `json:"amount"`
+	Confirmations int     `json:"confirmations"`
+	Spendable     bool    `json:"spendable"`
+	Solvable      bool    `json:"solvable"`
+}
+
+type signRawTXResponse struct {
+	Hex      string `json:"hex"`
+	Complete bool   `json:"complete"`
+}

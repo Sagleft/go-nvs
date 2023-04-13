@@ -16,18 +16,14 @@ func (c *Client) sendRequest(methodName string, resultPointer interface{}, reque
 			return errors.New("unknown field value: " + reflect.ValueOf(fieldData).String())
 		case string:
 			requestFields = append(requestFields, wrapJSONParam(fieldData.(string)))
-			break
 		case int:
 			requestFields = append(requestFields, json.RawMessage(strconv.Itoa(fieldData.(int))))
-			break
 		case int64:
 			requestFields = append(requestFields, json.RawMessage(
 				strconv.FormatInt(fieldData.(int64), 10)),
 			)
-			break
 		case ValueType:
 			requestFields = append(requestFields, wrapJSONParam(string(fieldData.(ValueType))))
-			break
 		}
 	}
 
