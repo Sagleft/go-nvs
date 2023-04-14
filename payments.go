@@ -89,9 +89,7 @@ func (c *Client) BatchCreateAccounts(count int) error {
 }
 
 func (c *Client) CreateNewInputs(
-	toAddress string,
 	inputMinAmount float64,
-	inputsCount int,
 	addresses []string,
 ) error {
 	inputs, err := c.ListUnspent()
@@ -115,13 +113,18 @@ func (c *Client) CreateNewInputs(
 		TransactionID: input.TransactionID,
 		VOut:          input.VOut,
 	}
+	inputTxAmount := input.Amount - DefaultFee
 	txInputs := []rawTXInput{txInput}
 	txInputsJSONBytes, err := json.Marshal(txInputs)
 	if err != nil {
 		return fmt.Errorf("encode tx inputs: %w", err)
 	}
 
-	outputs := map[string]float64{} // TODO
+	outputs := map[string]float64{}
+	for _, address := range addresses {
+		outputs[address] = inputTxAmount / float64(len(addresses))
+	}
+
 	outputsJSONBytes, err := json.Marshal(outputs)
 	if err != nil {
 		return fmt.Errorf("encode addresses: %w", err)
