@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
+	swissknife "github.com/Sagleft/swiss-knife"
 )
 
 func (c *Client) ListUnspent() ([]unspentData, error) {
@@ -60,10 +62,29 @@ func (c *Client) GetAccountAddresses() ([]string, error) {
 	return addresses, nil
 }
 
+// CreateAccount returns new account address
+func (c *Client) CreateAccount(name string) (string, error) {
+	var address string
+	if err := c.sendRequest("getnewaddress", &address, []interface{}{
+		name,
+	}); err != nil {
+		return "", fmt.Errorf("get new address: %w", err)
+	}
+	return address, nil
+}
+
+func (c *Client) createRandomAccount() error {
+	accountTag := swissknife.GetRandomString(16)
+	_, err := c.CreateAccount(accountTag)
+	return err
+}
+
 func (c *Client) BatchCreateAccounts(count int) error {
-	/*accounts
-	c.sendRequest("", )*/
-	// TODO
+	for i := 1; i <= count; i++ {
+		if err := c.createRandomAccount(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
